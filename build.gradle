@@ -1,5 +1,25 @@
 //file:noinspection DependencyNotationArgument
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
+android {
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])  // 直接引用文件名
+            storePassword keystoreProperties['de2r3fvsa']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['app-release']
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+}
 buildscript {
     apply from: './versions.gradle'
     addRepos(repositories) //增加代码仓库
